@@ -1,15 +1,15 @@
 {
   "name": "CMLibrary",
   "version": "0.1.0",
-  "summary": "A short description of CMLibrary.",
-  "description": "",
-  "homepage": "https://github.com/<GITHUB_USERNAME>/CMLibrary",
+  "summary": "A subclass on UILabel that provides a blink.",
+  "description": "This CocoaPod provides the ability to use a UILabel that may be started and stopped blinking.",
+  "homepage": "https://github.com/adityaaggarwal1/CMLibrary",
   "license": "MIT",
   "authors": {
     "adityaaggarwal1": "aditya.aggarwal@yahoo.co.in"
   },
   "source": {
-    "git": "https://github.com/<GITHUB_USERNAME>/CMLibrary.git",
+    "git": "https://github.com/adityaaggarwal1/CMLibrary.git",
     "tag": "0.1.0"
   },
   "platforms": {
