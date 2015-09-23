@@ -10,6 +10,30 @@
 		035E725DAAD266D2870EBA81AFF3DB8C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8BE439095847B1F87C15D5C47FC529F /* Foundation.framework */; };
 		062CC5616EF15BD2B2BAAB65FE803D87 /* CMLibrary-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E477C7BF1632618573897C1DD036A3 /* CMLibrary-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FBEEE056B4E384FD704A735FD73B5C5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8BE439095847B1F87C15D5C47FC529F /* Foundation.framework */; };
+		275C80171BB2F309006A59DD /* CacheModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C7FF71BB2F309006A59DD /* CacheModel.h */; settings = {ASSET_TAGS = (); }; };
+		275C80181BB2F309006A59DD /* CacheModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C7FF81BB2F309006A59DD /* CacheModel.m */; settings = {ASSET_TAGS = (); }; };
+		275C801A1BB2F309006A59DD /* CacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C7FFB1BB2F309006A59DD /* CacheManager.h */; settings = {ASSET_TAGS = (); }; };
+		275C801B1BB2F309006A59DD /* CacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C7FFC1BB2F309006A59DD /* CacheManager.m */; settings = {ASSET_TAGS = (); }; };
+		275C801C1BB2F309006A59DD /* WebserviceConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C7FFE1BB2F309006A59DD /* WebserviceConstants.h */; settings = {ASSET_TAGS = (); }; };
+		275C801D1BB2F309006A59DD /* WebserviceConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C7FFF1BB2F309006A59DD /* WebserviceConstants.m */; settings = {ASSET_TAGS = (); }; };
+		275C801E1BB2F309006A59DD /* Loader.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C80011BB2F309006A59DD /* Loader.h */; settings = {ASSET_TAGS = (); }; };
+		275C801F1BB2F309006A59DD /* Loader.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C80021BB2F309006A59DD /* Loader.m */; settings = {ASSET_TAGS = (); }; };
+		275C80201BB2F309006A59DD /* NSIImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C80041BB2F309006A59DD /* NSIImageView.h */; settings = {ASSET_TAGS = (); }; };
+		275C80211BB2F309006A59DD /* NSIImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C80051BB2F309006A59DD /* NSIImageView.m */; settings = {ASSET_TAGS = (); }; };
+		275C80221BB2F309006A59DD /* NSIProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C80071BB2F309006A59DD /* NSIProgressView.h */; settings = {ASSET_TAGS = (); }; };
+		275C80231BB2F309006A59DD /* NSIProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C80081BB2F309006A59DD /* NSIProgressView.m */; settings = {ASSET_TAGS = (); }; };
+		275C80241BB2F309006A59DD /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C800A1BB2F309006A59DD /* Reachability.h */; settings = {ASSET_TAGS = (); }; };
+		275C80251BB2F309006A59DD /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C800B1BB2F309006A59DD /* Reachability.m */; settings = {ASSET_TAGS = (); }; };
+		275C80261BB2F309006A59DD /* CMLibraryUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C800D1BB2F309006A59DD /* CMLibraryUtility.h */; settings = {ASSET_TAGS = (); }; };
+		275C80271BB2F309006A59DD /* CMLibraryUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C800E1BB2F309006A59DD /* CMLibraryUtility.m */; settings = {ASSET_TAGS = (); }; };
+		275C80281BB2F309006A59DD /* WebserviceCall.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C80101BB2F309006A59DD /* WebserviceCall.h */; settings = {ASSET_TAGS = (); }; };
+		275C80291BB2F309006A59DD /* WebserviceCall.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C80111BB2F309006A59DD /* WebserviceCall.m */; settings = {ASSET_TAGS = (); }; };
+		275C802A1BB2F309006A59DD /* WebserviceResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C80121BB2F309006A59DD /* WebserviceResponse.h */; settings = {ASSET_TAGS = (); }; };
+		275C802B1BB2F309006A59DD /* WebserviceResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C80131BB2F309006A59DD /* WebserviceResponse.m */; settings = {ASSET_TAGS = (); }; };
+		275C802C1BB2F309006A59DD /* XMLDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C80151BB2F309006A59DD /* XMLDictionary.h */; settings = {ASSET_TAGS = (); }; };
+		275C802D1BB2F309006A59DD /* XMLDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C80161BB2F309006A59DD /* XMLDictionary.m */; settings = {ASSET_TAGS = (); }; };
+		275C80311BB2F493006A59DD /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 275C802F1BB2F493006A59DD /* .gitkeep */; settings = {ASSET_TAGS = (); }; };
+		275C80321BB2F493006A59DD /* Cache.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 275C80301BB2F493006A59DD /* Cache.sqlite */; settings = {ASSET_TAGS = (); }; };
 		4CA7DA781D38FF5CBD50EA9D94C8F312 /* BlinkingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD2612D54DA16CAC8552522474D962E /* BlinkingLabel.swift */; };
 		4CACD10C7C234CDA48170ABF09D967C8 /* Pods-CMLibrary_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CBFE8FE5E9D124E9DF6D7135AC681B /* Pods-CMLibrary_Example-dummy.m */; };
 		5ADC4F66D671C9B1512132362757C751 /* CMLibrary-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 15F5CED92D660C1D0D4F9B4235CD3204 /* CMLibrary-dummy.m */; };
@@ -51,6 +75,30 @@
 		15F5CED92D660C1D0D4F9B4235CD3204 /* CMLibrary-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "CMLibrary-dummy.m"; sourceTree = "<group>"; };
 		188E29BC44FB4B9A844AEE21BFCEF918 /* Pods-CMLibrary_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CMLibrary_Tests-dummy.m"; sourceTree = "<group>"; };
 		1C47EFFBF66429214FE47DCBC2B3AC28 /* CMLibrary.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CMLibrary.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		275C7FF71BB2F309006A59DD /* CacheModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheModel.h; sourceTree = "<group>"; };
+		275C7FF81BB2F309006A59DD /* CacheModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheModel.m; sourceTree = "<group>"; };
+		275C7FFB1BB2F309006A59DD /* CacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheManager.h; sourceTree = "<group>"; };
+		275C7FFC1BB2F309006A59DD /* CacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheManager.m; sourceTree = "<group>"; };
+		275C7FFE1BB2F309006A59DD /* WebserviceConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebserviceConstants.h; sourceTree = "<group>"; };
+		275C7FFF1BB2F309006A59DD /* WebserviceConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebserviceConstants.m; sourceTree = "<group>"; };
+		275C80011BB2F309006A59DD /* Loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Loader.h; sourceTree = "<group>"; };
+		275C80021BB2F309006A59DD /* Loader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Loader.m; sourceTree = "<group>"; };
+		275C80041BB2F309006A59DD /* NSIImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSIImageView.h; sourceTree = "<group>"; };
+		275C80051BB2F309006A59DD /* NSIImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSIImageView.m; sourceTree = "<group>"; };
+		275C80071BB2F309006A59DD /* NSIProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSIProgressView.h; sourceTree = "<group>"; };
+		275C80081BB2F309006A59DD /* NSIProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSIProgressView.m; sourceTree = "<group>"; };
+		275C800A1BB2F309006A59DD /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		275C800B1BB2F309006A59DD /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		275C800D1BB2F309006A59DD /* CMLibraryUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMLibraryUtility.h; sourceTree = "<group>"; };
+		275C800E1BB2F309006A59DD /* CMLibraryUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMLibraryUtility.m; sourceTree = "<group>"; };
+		275C80101BB2F309006A59DD /* WebserviceCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebserviceCall.h; sourceTree = "<group>"; };
+		275C80111BB2F309006A59DD /* WebserviceCall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebserviceCall.m; sourceTree = "<group>"; };
+		275C80121BB2F309006A59DD /* WebserviceResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebserviceResponse.h; sourceTree = "<group>"; };
+		275C80131BB2F309006A59DD /* WebserviceResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebserviceResponse.m; sourceTree = "<group>"; };
+		275C80151BB2F309006A59DD /* XMLDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLDictionary.h; sourceTree = "<group>"; };
+		275C80161BB2F309006A59DD /* XMLDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLDictionary.m; sourceTree = "<group>"; };
+		275C802F1BB2F493006A59DD /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		275C80301BB2F493006A59DD /* Cache.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = Cache.sqlite; sourceTree = "<group>"; };
 		38D84CC077AAF5437E6196ACE01C7B94 /* Pods-CMLibrary_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CMLibrary_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		427511FE4F66F2F8FD5D85BB8824D2C6 /* Pods-CMLibrary_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CMLibrary_Example.release.xcconfig"; sourceTree = "<group>"; };
 		4B51434EADA7583D5DD47465A63E218D /* Pods-CMLibrary_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CMLibrary_Tests-umbrella.h"; sourceTree = "<group>"; };
@@ -119,6 +167,7 @@
 		11F1DA20D1936989409BC7D9C3834695 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				275C7FF51BB2F309006A59DD /* CMLibrary */,
 				5DD2612D54DA16CAC8552522474D962E /* BlinkingLabel.swift */,
 			);
 			path = Classes;
@@ -142,6 +191,124 @@
 			path = "Target Support Files/Pods-CMLibrary_Example";
 			sourceTree = "<group>";
 		};
+		275C7FF51BB2F309006A59DD /* CMLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				275C7FF61BB2F309006A59DD /* Cache */,
+				275C7FFA1BB2F309006A59DD /* CacheManager */,
+				275C7FFD1BB2F309006A59DD /* Constants */,
+				275C80001BB2F309006A59DD /* Loader */,
+				275C80031BB2F309006A59DD /* NSIImageView */,
+				275C80061BB2F309006A59DD /* NSIProgressView */,
+				275C80091BB2F309006A59DD /* Reachability */,
+				275C800C1BB2F309006A59DD /* Utility */,
+				275C800F1BB2F309006A59DD /* WebserviceCallManager */,
+				275C80141BB2F309006A59DD /* XMLDictionary */,
+			);
+			path = CMLibrary;
+			sourceTree = "<group>";
+		};
+		275C7FF61BB2F309006A59DD /* Cache */ = {
+			isa = PBXGroup;
+			children = (
+				275C7FF71BB2F309006A59DD /* CacheModel.h */,
+				275C7FF81BB2F309006A59DD /* CacheModel.m */,
+			);
+			path = Cache;
+			sourceTree = "<group>";
+		};
+		275C7FFA1BB2F309006A59DD /* CacheManager */ = {
+			isa = PBXGroup;
+			children = (
+				275C7FFB1BB2F309006A59DD /* CacheManager.h */,
+				275C7FFC1BB2F309006A59DD /* CacheManager.m */,
+			);
+			path = CacheManager;
+			sourceTree = "<group>";
+		};
+		275C7FFD1BB2F309006A59DD /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				275C7FFE1BB2F309006A59DD /* WebserviceConstants.h */,
+				275C7FFF1BB2F309006A59DD /* WebserviceConstants.m */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
+		275C80001BB2F309006A59DD /* Loader */ = {
+			isa = PBXGroup;
+			children = (
+				275C80011BB2F309006A59DD /* Loader.h */,
+				275C80021BB2F309006A59DD /* Loader.m */,
+			);
+			path = Loader;
+			sourceTree = "<group>";
+		};
+		275C80031BB2F309006A59DD /* NSIImageView */ = {
+			isa = PBXGroup;
+			children = (
+				275C80041BB2F309006A59DD /* NSIImageView.h */,
+				275C80051BB2F309006A59DD /* NSIImageView.m */,
+			);
+			path = NSIImageView;
+			sourceTree = "<group>";
+		};
+		275C80061BB2F309006A59DD /* NSIProgressView */ = {
+			isa = PBXGroup;
+			children = (
+				275C80071BB2F309006A59DD /* NSIProgressView.h */,
+				275C80081BB2F309006A59DD /* NSIProgressView.m */,
+			);
+			path = NSIProgressView;
+			sourceTree = "<group>";
+		};
+		275C80091BB2F309006A59DD /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				275C800A1BB2F309006A59DD /* Reachability.h */,
+				275C800B1BB2F309006A59DD /* Reachability.m */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
+		275C800C1BB2F309006A59DD /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				275C800D1BB2F309006A59DD /* CMLibraryUtility.h */,
+				275C800E1BB2F309006A59DD /* CMLibraryUtility.m */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		275C800F1BB2F309006A59DD /* WebserviceCallManager */ = {
+			isa = PBXGroup;
+			children = (
+				275C80101BB2F309006A59DD /* WebserviceCall.h */,
+				275C80111BB2F309006A59DD /* WebserviceCall.m */,
+				275C80121BB2F309006A59DD /* WebserviceResponse.h */,
+				275C80131BB2F309006A59DD /* WebserviceResponse.m */,
+			);
+			path = WebserviceCallManager;
+			sourceTree = "<group>";
+		};
+		275C80141BB2F309006A59DD /* XMLDictionary */ = {
+			isa = PBXGroup;
+			children = (
+				275C80151BB2F309006A59DD /* XMLDictionary.h */,
+				275C80161BB2F309006A59DD /* XMLDictionary.m */,
+			);
+			path = XMLDictionary;
+			sourceTree = "<group>";
+		};
+		275C802E1BB2F493006A59DD /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				275C802F1BB2F493006A59DD /* .gitkeep */,
+				275C80301BB2F493006A59DD /* Cache.sqlite */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		530E09B4C0347C6CC1E2213CDFEA78FA /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -162,6 +329,7 @@
 		599E428718FEF17446E8AEECBA7312DC /* Pod */ = {
 			isa = PBXGroup;
 			children = (
+				275C802E1BB2F493006A59DD /* Assets */,
 				11F1DA20D1936989409BC7D9C3834695 /* Classes */,
 			);
 			path = Pod;
@@ -263,7 +431,18 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				275C80201BB2F309006A59DD /* NSIImageView.h in Headers */,
+				275C801A1BB2F309006A59DD /* CacheManager.h in Headers */,
+				275C80221BB2F309006A59DD /* NSIProgressView.h in Headers */,
+				275C80281BB2F309006A59DD /* WebserviceCall.h in Headers */,
 				062CC5616EF15BD2B2BAAB65FE803D87 /* CMLibrary-umbrella.h in Headers */,
+				275C80171BB2F309006A59DD /* CacheModel.h in Headers */,
+				275C80241BB2F309006A59DD /* Reachability.h in Headers */,
+				275C80261BB2F309006A59DD /* CMLibraryUtility.h in Headers */,
+				275C802C1BB2F309006A59DD /* XMLDictionary.h in Headers */,
+				275C801C1BB2F309006A59DD /* WebserviceConstants.h in Headers */,
+				275C802A1BB2F309006A59DD /* WebserviceResponse.h in Headers */,
+				275C801E1BB2F309006A59DD /* Loader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,6 +563,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				275C80321BB2F493006A59DD /* Cache.sqlite in Resources */,
+				275C80311BB2F493006A59DD /* .gitkeep in Resources */,
 				B4A851C40B367E1DAD5338B11AF56E08 /* CMLibrary.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -418,8 +599,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				275C802D1BB2F309006A59DD /* XMLDictionary.m in Sources */,
+				275C80291BB2F309006A59DD /* WebserviceCall.m in Sources */,
+				275C802B1BB2F309006A59DD /* WebserviceResponse.m in Sources */,
+				275C801B1BB2F309006A59DD /* CacheManager.m in Sources */,
+				275C801D1BB2F309006A59DD /* WebserviceConstants.m in Sources */,
 				4CA7DA781D38FF5CBD50EA9D94C8F312 /* BlinkingLabel.swift in Sources */,
+				275C80211BB2F309006A59DD /* NSIImageView.m in Sources */,
 				5ADC4F66D671C9B1512132362757C751 /* CMLibrary-dummy.m in Sources */,
+				275C801F1BB2F309006A59DD /* Loader.m in Sources */,
+				275C80271BB2F309006A59DD /* CMLibraryUtility.m in Sources */,
+				275C80231BB2F309006A59DD /* NSIProgressView.m in Sources */,
+				275C80251BB2F309006A59DD /* Reachability.m in Sources */,
+				275C80181BB2F309006A59DD /* CacheModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
