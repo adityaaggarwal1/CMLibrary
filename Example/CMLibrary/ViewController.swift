@@ -33,12 +33,25 @@ class ViewController: UIViewController {
     }
     
     func toggleBlinking() {
-        if (isBlinking) {
-            blinkingLabel.stopBlinking()
-        } else {
-            blinkingLabel.startBlinking()
+//        if (isBlinking) {
+//            blinkingLabel.stopBlinking()
+//        } else {
+//            blinkingLabel.startBlinking()
+//        }
+//        isBlinking = !isBlinking
+        
+        let webserviceCall = WebserviceCall(responseType: WebserviceCallResponseJSON, cachePolicy: WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache)
+        
+        webserviceCall.GET(NSURL(string: "http://jsonplaceholder.typicode.com/posts"), parameters: nil, withSuccessHandler: { (response: WebserviceResponse!) -> Void in
+            
+            let responseDict = response as WebserviceResponse
+            
+            NSLog("%@",responseDict.webserviceResponse.description)
+            
+            }) { (error: NSError!) -> Void in
+                
         }
-        isBlinking = !isBlinking
+        
     }
 
 }

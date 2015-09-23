@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  CMLibrary: 23c47bf2c1e211259a7c09e9cbf3778e2cddb59a
+  CMLibrary: a56f183edb638d93626a4ebf7b14c16ab7f83c81
 
 COCOAPODS: 0.38.2

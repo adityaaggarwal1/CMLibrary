@@ -1,0 +1,1 @@
+CMLIBRARY_OTHER_LDFLAGS = -l"sqlite3"
