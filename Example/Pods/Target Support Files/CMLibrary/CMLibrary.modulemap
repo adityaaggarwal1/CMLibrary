@@ -1,0 +1,6 @@
+framework module CMLibrary {
+  umbrella header "CMLibrary-umbrella.h"
+
+  export *
+  module * { export * }
+}

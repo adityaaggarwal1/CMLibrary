@@ -1,0 +1,14 @@
+PODS:
+  - CMLibrary (0.1.0)
+
+DEPENDENCIES:
+  - CMLibrary (from `../`)
+
+EXTERNAL SOURCES:
+  CMLibrary:
+    :path: ../
+
+SPEC CHECKSUMS:
+  CMLibrary: 221ff4988a8153560daeb97ed5c530756e89ea34
+
+COCOAPODS: 0.38.2

@@ -1,0 +1,25 @@
+{
+  "name": "CMLibrary",
+  "version": "0.1.0",
+  "summary": "A short description of CMLibrary.",
+  "description": "",
+  "homepage": "https://github.com/<GITHUB_USERNAME>/CMLibrary",
+  "license": "MIT",
+  "authors": {
+    "adityaaggarwal1": "aditya.aggarwal@yahoo.co.in"
+  },
+  "source": {
+    "git": "https://github.com/<GITHUB_USERNAME>/CMLibrary.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "requires_arc": true,
+  "source_files": "Pod/Classes/**/*",
+  "resource_bundles": {
+    "CMLibrary": [
+      "Pod/Assets/*.png"
+    ]
+  }
+}
