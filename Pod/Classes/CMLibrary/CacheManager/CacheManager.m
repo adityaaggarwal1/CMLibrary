@@ -67,8 +67,11 @@
             return;
 	}
     
+    NSString *sqlitePath = [NSString stringWithFormat:@"Frameworks/CMLibrary.framework/%@",CacheManagerSqliteName];
+    
+    NSString *defaultDBPath = [[NSBundle mainBundle] pathForResource:sqlitePath ofType:nil];
 	// The writable database does not exist, so copy the default to the appropriate location.
-	NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:CacheManagerSqliteName];
+//	NSString *defaultDBPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:CacheManagerSqliteName];
 	success = [fileManager copyItemAtPath:defaultDBPath toPath:writableDBPath error:&error];
     
 	if (!success) {

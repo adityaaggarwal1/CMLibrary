@@ -46,7 +46,8 @@ class ViewController: UIViewController {
             
             let responseDict = response as WebserviceResponse
             
-            NSLog("%@",responseDict.webserviceResponse.description)
+            print(responseDict.webserviceResponse)
+//            NSLog("%@",responseDict.webserviceResponse.description)
             
             }) { (error: NSError!) -> Void in
                 
