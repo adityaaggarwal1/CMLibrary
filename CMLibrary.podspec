@@ -29,9 +29,10 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes/**/*'
-  s.resource_bundles = {
-    'CMLibrary' => ['Pod/Assets/*.png', 'Pod/Assets/*.sqlite']
-  }
+  s.resource = 'Pod/Assets/*.sqlite'
+##s.resource_bundles = {
+##  'CMLibrary' => ['Pod/Assets/*.png']
+##}
 
   s.library = 'sqlite3'
 

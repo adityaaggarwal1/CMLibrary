@@ -1,5 +1,5 @@
 PODS:
-  - CMLibrary (0.1.1)
+  - CMLibrary (0.1.2)
 
 DEPENDENCIES:
   - CMLibrary (from `../`)
@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  CMLibrary: a56f183edb638d93626a4ebf7b14c16ab7f83c81
+  CMLibrary: 90e51b75bd50697d2c60aa4eba4dc3d38d9defec
 
 COCOAPODS: 0.38.2
