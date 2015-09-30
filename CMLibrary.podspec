@@ -8,15 +8,15 @@
 
 Pod::Spec.new do |s|
   s.name             = "CMLibrary"
-  s.version          = "0.1.2"
-  s.summary          = "A subclass on UILabel that provides a blink."
+  s.version          = "0.1.3"
+  s.summary          = "Library for calling web services."
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
 #   * Try to keep it short, snappy and to the point.
 #   * Write the description between the DESC delimiters below.
 #   * Finally, don't worry about the indent, CocoaPods strips it!  
-  s.description      = "This CocoaPod provides the ability to use a UILabel that may be started and stopped blinking."
+s.description      = "This CocoaPod provides the ability to fetch/push data through a web service call. It contains lots of customization that you can configure following features: caching, response type, request type etc."
 
   s.homepage         = "https://github.com/adityaaggarwal1/CMLibrary"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
