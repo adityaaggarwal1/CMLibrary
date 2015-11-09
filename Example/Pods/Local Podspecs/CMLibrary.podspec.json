@@ -1,8 +1,8 @@
 {
   "name": "CMLibrary",
-  "version": "0.1.2",
-  "summary": "A subclass on UILabel that provides a blink.",
-  "description": "This CocoaPod provides the ability to use a UILabel that may be started and stopped blinking.",
+  "version": "0.1.5",
+  "summary": "Library for calling web services.",
+  "description": "This CocoaPod provides the ability to fetch/push data through a web service call. It contains lots of customization that you can configure following features: caching, response type, request type etc.",
   "homepage": "https://github.com/adityaaggarwal1/CMLibrary",
   "license": "MIT",
   "authors": {
@@ -10,10 +10,10 @@
   },
   "source": {
     "git": "https://github.com/adityaaggarwal1/CMLibrary.git",
-    "tag": "0.1.2"
+    "tag": "0.1.5"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "7.0"
   },
   "requires_arc": true,
   "source_files": "Pod/Classes/**/*",
