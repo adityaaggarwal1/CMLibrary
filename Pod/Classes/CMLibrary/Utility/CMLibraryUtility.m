@@ -3,7 +3,6 @@
 //  EdPlace
 //
 //  Created by Aditya Aggarwal on 1/22/15.
-//  Copyright (c) 2015 Net Solutions. All rights reserved.
 //
 
 #import "CMLibraryUtility.h"

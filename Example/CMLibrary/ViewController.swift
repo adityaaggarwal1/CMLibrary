@@ -10,35 +10,18 @@ import UIKit
 import CMLibrary
 
 class ViewController: UIViewController {
-
-    var isBlinking = false
-    let blinkingLabel = BlinkingLabel(frame: CGRectMake(10, 20, 200, 30))
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Setup the BlinkingLabel
-        blinkingLabel.text = "I blink!"
-        blinkingLabel.font = UIFont.systemFontOfSize(20)
-        view.addSubview(blinkingLabel)
-        blinkingLabel.startBlinking()
-        isBlinking = true
-        
-        // Create a UIButton to toggle the blinking
         let toggleButton = UIButton(frame: CGRectMake(10, 60, 125, 30))
-        toggleButton.setTitle("Toggle Blinking", forState: .Normal)
+        toggleButton.setTitle("Webservice Call", forState: .Normal)
         toggleButton.setTitleColor(UIColor.redColor(), forState: .Normal)
-        toggleButton.addTarget(self, action: "toggleBlinking", forControlEvents: .TouchUpInside)
+        toggleButton.addTarget(self, action: "uploadFileUsingMultipartUpload", forControlEvents: .TouchUpInside)
         view.addSubview(toggleButton)
     }
     
-    func toggleBlinking() {
-//        if (isBlinking) {
-//            blinkingLabel.stopBlinking()
-//        } else {
-//            blinkingLabel.startBlinking()
-//        }
-//        isBlinking = !isBlinking
+    func callWebservice() {
         
         let webserviceCall = WebserviceCall(responseType: WebserviceCallResponseJSON, cachePolicy: WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache)
         
@@ -47,12 +30,27 @@ class ViewController: UIViewController {
             let responseDict = response as WebserviceResponse
             
             print(responseDict.webserviceResponse)
-//            NSLog("%@",responseDict.webserviceResponse.description)
             
             }) { (error: NSError!) -> Void in
                 
         }
         
+    }
+    
+    func uploadFileUsingMultipartUpload(){
+        
+        let webserviceCall = WebserviceCall(responseType: WebserviceCallResponseString, cachePolicy: WebserviceCallCachePolicyRequestFromUrlNoCache)
+        
+        let fileData = NSData(contentsOfFile: NSBundle.mainBundle().pathForResource("iOS Simulator Screen.png", ofType: nil)!)
+        
+        webserviceCall.uploadFile(fileData, withFileName: "iOS Simulator Screen.png", withFieldName: "file", mimeType: "image/png", onUrl: NSURL(string: "http://posttestserver.com/post.php?dir=example"), withSuccessHandler: { (response: WebserviceResponse!) -> Void in
+            
+                let responseDict = response as WebserviceResponse
+                
+                print(responseDict.webserviceResponse)
+            }) { (error: NSError!) -> Void in
+                
+        }
     }
 
 }

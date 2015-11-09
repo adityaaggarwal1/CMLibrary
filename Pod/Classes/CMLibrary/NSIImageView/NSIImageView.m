@@ -38,7 +38,7 @@
 {
     WebserviceCall *webserviceCall = [[WebserviceCall alloc] initWithResponseType:WebserviceCallResponsePNG cachePolicy:WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache];
     
-    [webserviceCall downloadFileFromUrl:[NSURL URLWithString:url] ofType:WebserviceCallResponsePNG withSuccessHandler:^(WebserviceResponse *response) {
+    [webserviceCall downloadFileFromUrl:[NSURL URLWithString:url] withSuccessHandler:^(WebserviceResponse *response) {
         
         NSString *url = [response webserviceUrl];
         

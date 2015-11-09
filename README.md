@@ -24,7 +24,7 @@ pod "CMLibrary"
 
 ## Author
 
-adityaaggarwal1, aditya.aggarwal@yahoo.co.in
+Aditya Aggarwal, aditya.aggarwal@yahoo.co.in
 
 ## License
 

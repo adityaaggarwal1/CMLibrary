@@ -11,7 +11,7 @@
 #import "CacheManager.h"
 #import "CacheModel.h"
 #import "Loader.h"
-#import "WebserviceConstants.h"
+#import "CMLibraryConstants.h"
 #import "CMLibraryUtility.h"
 
 NSString const *CachedResourcesFolderName = @"CachedResources";
@@ -298,12 +298,10 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     return directoryPath;
 }
 
--(void)downloadFileFromUrl:(NSURL *)url ofType:(WebserviceCallResponseType)responseType withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure
+-(void)downloadFileFromUrl:(NSURL *)url withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure
 {
     if(!url)
         return;
-    
-    _responseType = responseType;
     
     successHandler = handlerSuccess;
     failureHandler = handlerFailure;
@@ -700,6 +698,8 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
         responseData = [NSDictionary dictionaryWithXMLData:data];
     else if(_responseType == WebserviceCallResponsePNG || _responseType == WebserviceCallResponseJPEG)
         responseData = data;
+    else if(_responseType == WebserviceCallResponseString)
+        responseData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     else
         responseData = data;
     
@@ -749,9 +749,9 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
 
 #pragma mark - File upload
 
--(void)uploadFile:(NSData *)file withFileType:(NSString *)fileType onUrl:(NSURL *)url withDelegate:(id)delegate successSelector:(SEL)successSelector failureSelector:(SEL)failureSelector
+-(void)uploadFile:(NSData *)file withFileName:(NSString *)fileName withFieldName:(NSString *)fieldName mimeType:(NSString *)mimeType onUrl:(NSURL *)url withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure
 {
-    if(!url)
+    if(!url || !file || ![CMLibraryUtility checkIfStringContainsText:mimeType])
         return;
     
     if (![self checkNetworkConnectivity])
@@ -759,7 +759,15 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
         failureHandler([NSError errorWithDomain:@"No Internet" code:NotReachable userInfo:nil]);
         return;
     }
-
+    
+    successHandler = handlerSuccess;
+    failureHandler = handlerFailure;
+    
+    [self setUrl:url];
+    
+    if(![CMLibraryUtility checkIfStringContainsText:fieldName])
+        fieldName = @"file";
+    
     if(_isShowLoader)////self showLoader];
     {
         if(!ObjLoader)
@@ -771,8 +779,8 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
     NSString *boundary = @"---------------------------14737809831466499882746641449";
-
-//    Open form
+    
+    //    Open form
     NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
     [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
     
@@ -781,8 +789,8 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     if(file)
     {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n",fileType] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Type: image/png\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n",fieldName,fileName] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n",mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[NSData dataWithData:file]];
         [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     }
@@ -795,15 +803,6 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
         [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n",key] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [body appendData:[[_parametersDict valueForKey:key] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    }
-    
-    if([CMLibraryUtility checkIfStringContainsText:_headerBody])
-    {
-        NSString *userId = [[_headerBody componentsSeparatedByString:@"="] lastObject];
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n",@"userId"] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[userId dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     }
     
@@ -843,8 +842,7 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
          }
          else if(connectionError)
          {
-             if([delegate respondsToSelector:failureSelector])
-                 SuppressPerformSelectorLeakWarning([delegate performSelector:failureSelector withObject:self withObject:connectionError]);
+             failureHandler(connectionError);
          }
      }];
 }

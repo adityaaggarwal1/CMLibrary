@@ -2,7 +2,7 @@
 
 #import "CacheModel.h"
 #import "CacheManager.h"
-#import "WebserviceConstants.h"
+#import "CMLibraryConstants.h"
 #import "Loader.h"
 #import "NSIImageView.h"
 #import "NSIProgressView.h"

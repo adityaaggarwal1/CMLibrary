@@ -15,7 +15,7 @@
 		171508A45F3AA75CDE26341E23821C09 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10223DEFAF734CD6B6FC32ADDCEE5C2F /* Foundation.framework */; };
 		1865DCF7EBC214B7F797FE0366A8111E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D983D187ADC782B56FCECEF5CD9C03A /* Reachability.m */; };
 		1B2B50B232622406155F99E7E6FE1A65 /* XMLDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = B5AA6AAE5EEE2E3AA447BD8007C588AF /* XMLDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1C0537690347B89513CC1C89AC409EED /* WebserviceConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF6E19921C8D71182D947F3F358E761 /* WebserviceConstants.m */; };
+		1C0537690347B89513CC1C89AC409EED /* CMLibraryConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF6E19921C8D71182D947F3F358E761 /* CMLibraryConstants.m */; };
 		1FBEEE056B4E384FD704A735FD73B5C5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10223DEFAF734CD6B6FC32ADDCEE5C2F /* Foundation.framework */; };
 		241F8F6D492CC307A57BA04F2CA14EEA /* NSIProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F24DC4C33A8A78E4D0A70CE8C5DE860 /* NSIProgressView.m */; };
 		25E9185EA0587933567FB8DB65BEF2F9 /* CacheModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C08039A6EBCA8EA14FD4A76D82733F7 /* CacheModel.m */; };
@@ -27,8 +27,7 @@
 		61D5AA488505EFDC4E537052BC0D7A86 /* WebserviceResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 26EFD08A8F9EB812C728539346AD22EF /* WebserviceResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6CFC6BDD80AAED889E87805B95C6309A /* Loader.m in Sources */ = {isa = PBXBuildFile; fileRef = 52663DFB51572D49D2D39754F849AA2F /* Loader.m */; };
 		72B815A67751576D2C59956E49BDF722 /* CMLibraryUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = CA1AA9569AFE8C5D9643AC1B41936EB9 /* CMLibraryUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		799908B5EB7CBABA9F69A3598EB6A44D /* BlinkingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A702B831FAA2ED8E3C687A79AA0AE /* BlinkingLabel.swift */; };
-		829C0BB9182A89C2F1757448DCA310B4 /* WebserviceConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 9B022411BA8E77416C63C4D9F5DAFFB4 /* WebserviceConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		829C0BB9182A89C2F1757448DCA310B4 /* CMLibraryConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 9B022411BA8E77416C63C4D9F5DAFFB4 /* CMLibraryConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		850D8628CEF7C414ED95280489DD57BD /* CacheModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 3F0DC99925B7BABEC4DC5BE442669016 /* CacheModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8BB4A450631DA3C0DB5671CC0C88CE0F /* Pods-CMLibrary_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D3BDABEC1C16D5F9C5C0224553B330B9 /* Pods-CMLibrary_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		903C88D9E66DD995F2A7846B0E1A0DC2 /* Loader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD15BC347A75FF34A8E7143E170ABE3 /* Loader.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -86,10 +85,9 @@
 		775BA509C41981EBDC3EC4CB532AB870 /* Pods-CMLibrary_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CMLibrary_Tests-resources.sh"; sourceTree = "<group>"; };
 		79B957477FB6FEEE34F2FDD1C7A05FE4 /* Pods-CMLibrary_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CMLibrary_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		7B501D40A59E5388041F37DCD3C9CF56 /* Reachability.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		7D7A702B831FAA2ED8E3C687A79AA0AE /* BlinkingLabel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BlinkingLabel.swift; sourceTree = "<group>"; };
-		8DF6E19921C8D71182D947F3F358E761 /* WebserviceConstants.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = WebserviceConstants.m; sourceTree = "<group>"; };
+		8DF6E19921C8D71182D947F3F358E761 /* CMLibraryConstants.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CMLibraryConstants.m; sourceTree = "<group>"; };
 		9801B450E776FD831FF86762987B39EA /* NSIImageView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = NSIImageView.m; sourceTree = "<group>"; };
-		9B022411BA8E77416C63C4D9F5DAFFB4 /* WebserviceConstants.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = WebserviceConstants.h; sourceTree = "<group>"; };
+		9B022411BA8E77416C63C4D9F5DAFFB4 /* CMLibraryConstants.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = CMLibraryConstants.h; sourceTree = "<group>"; };
 		9D983D187ADC782B56FCECEF5CD9C03A /* Reachability.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		A1DA24A2385DED1735D4753B81E7B075 /* WebserviceCall.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = WebserviceCall.m; sourceTree = "<group>"; };
 		ACFD1F605551BE29F9524BB9D203ADC1 /* CacheManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CacheManager.m; sourceTree = "<group>"; };
@@ -149,7 +147,6 @@
 		14BCE9C16E2DE3323DD1DEC90ECC6306 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				7D7A702B831FAA2ED8E3C687A79AA0AE /* BlinkingLabel.swift */,
 				D4040C2E4A51756D5569832FF4E1E481 /* CMLibrary */,
 			);
 			path = Classes;
@@ -236,8 +233,8 @@
 		72078471A1F060A569B65FD8AF7BAE8F /* Constants */ = {
 			isa = PBXGroup;
 			children = (
-				9B022411BA8E77416C63C4D9F5DAFFB4 /* WebserviceConstants.h */,
-				8DF6E19921C8D71182D947F3F358E761 /* WebserviceConstants.m */,
+				9B022411BA8E77416C63C4D9F5DAFFB4 /* CMLibraryConstants.h */,
+				8DF6E19921C8D71182D947F3F358E761 /* CMLibraryConstants.m */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -436,7 +433,7 @@
 				CF7544261A17E3EB2FA0ADF1A20EA4E1 /* NSIProgressView.h in Headers */,
 				3E7023CBFC94F5D3F8D636F84FE8EBFA /* Reachability.h in Headers */,
 				0ADEE672ACF632D728C824E2F05357C6 /* WebserviceCall.h in Headers */,
-				829C0BB9182A89C2F1757448DCA310B4 /* WebserviceConstants.h in Headers */,
+				829C0BB9182A89C2F1757448DCA310B4 /* CMLibraryConstants.h in Headers */,
 				61D5AA488505EFDC4E537052BC0D7A86 /* WebserviceResponse.h in Headers */,
 				1B2B50B232622406155F99E7E6FE1A65 /* XMLDictionary.h in Headers */,
 			);
@@ -567,7 +564,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				799908B5EB7CBABA9F69A3598EB6A44D /* BlinkingLabel.swift in Sources */,
 				02B0645A23D90F883996D40EB945E1E5 /* CMLibrary-dummy.m in Sources */,
 				C26969F4B72A9386C0A886684F43DEF5 /* CMLibraryUtility.m in Sources */,
 				B1344DAD565820B3FCB26A15AD00B11A /* CacheManager.m in Sources */,
@@ -577,7 +573,7 @@
 				241F8F6D492CC307A57BA04F2CA14EEA /* NSIProgressView.m in Sources */,
 				1865DCF7EBC214B7F797FE0366A8111E /* Reachability.m in Sources */,
 				4C59311E0F575E986A23262E39CD2589 /* WebserviceCall.m in Sources */,
-				1C0537690347B89513CC1C89AC409EED /* WebserviceConstants.m in Sources */,
+				1C0537690347B89513CC1C89AC409EED /* CMLibraryConstants.m in Sources */,
 				065573C16251D0228F58B447FB3C5C3A /* WebserviceResponse.m in Sources */,
 				D3DC957DC9C901C7ACEAF2F600CED5EB /* XMLDictionary.m in Sources */,
 			);

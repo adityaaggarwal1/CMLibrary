@@ -25,7 +25,8 @@ typedef enum{
     WebserviceCallResponseJPEG,
     WebserviceCallResponsePDF,
     WebserviceCallResponseMP4,
-    WebserviceCallResponseSqliteFile
+    WebserviceCallResponseSqliteFile,
+    WebserviceCallResponseString
     
 }WebserviceCallResponseType;
 
@@ -105,7 +106,7 @@ typedef void(^FailureHandler)(NSError *error);
 -(void)PUT:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;
 
 
--(void)downloadFileFromUrl:(NSURL *)url ofType:(WebserviceCallResponseType)responseType withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;
--(void)uploadFile:(NSData *)file withFileType:(NSString *)fileType onUrl:(NSURL *)url withDelegate:(id)delegate successSelector:(SEL)successSelector failureSelector:(SEL)failureSelector;
+-(void)downloadFileFromUrl:(NSURL *)url withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;
+-(void)uploadFile:(NSData *)file withFileName:(NSString *)fileName withFieldName:(NSString *)fieldName mimeType:(NSString *)mimeType onUrl:(NSURL *)url withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;
 
 @end
