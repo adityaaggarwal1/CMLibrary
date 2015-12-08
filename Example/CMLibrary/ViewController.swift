@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         let toggleButton = UIButton(frame: CGRectMake(10, 60, 125, 30))
         toggleButton.setTitle("Webservice Call", forState: .Normal)
         toggleButton.setTitleColor(UIColor.redColor(), forState: .Normal)
-        toggleButton.addTarget(self, action: "uploadFileUsingMultipartUpload", forControlEvents: .TouchUpInside)
+        toggleButton.addTarget(self, action: "callWebservice", forControlEvents: .TouchUpInside)
         view.addSubview(toggleButton)
     }
     
@@ -25,7 +25,19 @@ class ViewController: UIViewController {
         
         let webserviceCall = WebserviceCall(responseType: WebserviceCallResponseJSON, cachePolicy: WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache)
         
-        webserviceCall.GET(NSURL(string: "http://jsonplaceholder.typicode.com/posts"), parameters: nil, withSuccessHandler: { (response: WebserviceResponse!) -> Void in
+//        http://jsonplaceholder.typicode.com/comments?postId=1
+        
+//        webserviceCall.GET(NSURL(string: "http://jsonplaceholder.typicode.com/posts"), parameters: nil, withSuccessHandler: { (response: WebserviceResponse!) -> Void in
+//            
+//            let responseDict = response as WebserviceResponse
+//            
+//            print(responseDict.webserviceResponse)
+//            
+//            }) { (error: NSError!) -> Void in
+//                
+//        }
+        
+        webserviceCall.GET(NSURL(string: "http://jsonplaceholder.typicode.com/comments"), parameters: ["postId":"1"], withSuccessHandler: { (response: WebserviceResponse!) -> Void in
             
             let responseDict = response as WebserviceResponse
             

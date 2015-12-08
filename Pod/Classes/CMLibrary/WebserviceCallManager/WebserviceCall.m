@@ -160,29 +160,30 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
         } else {
             [request setHTTPMethod:@"PUT"];
         }
-        if(_headerFieldsDict)
-        {
-            NSArray *allKeys = [_headerFieldsDict allKeys];
-            
-            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-            
-            for (NSString *key in allKeys)
-            {
-                [request setValue:[_headerFieldsDict objectForKey:key] forHTTPHeaderField:key];
-            }
-        }
-        else if(_headerBody)
+        
+        if(_headerBody)
         {
             [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
             [request setHTTPBody:[NSData dataWithBytes:[_headerBody UTF8String] length:[_headerBody length]]];
-            
         }
-        if(_parametersDict)
+        else if(_parametersDict)
         {
             NSError *error;
             NSData *postData = [NSJSONSerialization dataWithJSONObject:_parametersDict options:NSJSONWritingPrettyPrinted error:&error];
             [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
             [request setHTTPBody:postData];
+        }
+    }
+    
+    if(_headerFieldsDict)
+    {
+        NSArray *allKeys = [_headerFieldsDict allKeys];
+        
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        
+        for (NSString *key in allKeys)
+        {
+            [request setValue:[_headerFieldsDict objectForKey:key] forHTTPHeaderField:key];
         }
     }
     
