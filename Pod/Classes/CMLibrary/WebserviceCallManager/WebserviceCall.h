@@ -44,7 +44,9 @@ typedef enum{
     
     WebserviceCallRequestTypePost,
     WebserviceCallRequestTypePut,
-    WebserviceCallRequestTypeGet
+    WebserviceCallRequestTypeGet,
+    WebserviceCallRequestTypePatch,
+    WebserviceCallRequestTypeDelete
     
 }WebserviceCallRequestType;
 
@@ -85,6 +87,7 @@ typedef void(^FailureHandler)(NSError *error);
 @property (assign, nonatomic) void(^ProgressHandler)(WebserviceResponse *response);
 @property (nonatomic, copy) NSDictionary *parametersDict;
 @property (nonatomic, assign) BOOL isShowLoader;
+@property (nonatomic, assign) BOOL shouldDisableInteraction;
 @property (nonatomic, copy) NSDictionary *headerFieldsDict;
 @property (nonatomic, copy) NSURL *url;
 @property (nonatomic,strong)  NSString *headerBody;
@@ -104,7 +107,8 @@ typedef void(^FailureHandler)(NSError *error);
 -(void)GET:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;
 -(void)POST:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;
 -(void)PUT:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;
-
+-(void)PATCH:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;
+-(void)DELETE:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;
 
 -(void)downloadFileFromUrl:(NSURL *)url withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;
 -(void)uploadFile:(NSData *)file withFileName:(NSString *)fileName withFieldName:(NSString *)fieldName mimeType:(NSString *)mimeType onUrl:(NSURL *)url withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;

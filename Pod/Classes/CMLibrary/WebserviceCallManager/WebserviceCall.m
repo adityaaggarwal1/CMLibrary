@@ -75,6 +75,7 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
             [self respondToSuccessHandlerWithData:cache.cacheValue isResponseFromCache:YES];
             
             [self setIsShowLoader:NO];
+            [self setShouldDisableInteraction:NO];
             
             if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheIfAvailableOtherwiseFromUrlAndUpdateInCache)
                 return;
@@ -87,6 +88,10 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
             ObjLoader = [[Loader alloc] init];
         
         [ObjLoader showLoader];
+    }
+    
+    if(_shouldDisableInteraction){
+        [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:NO];
     }
     
     [self makeRequestForWebServiceAtURL:url];
@@ -115,6 +120,20 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     [self webserviceCall:url parameters:parameters withSuccessHandler:handlerSuccess withFailureHandler:handlerFailure];
 }
 
+- (void)PATCH:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure
+{
+    requestType = WebserviceCallRequestTypePatch;
+    
+    [self webserviceCall:url parameters:parameters withSuccessHandler:handlerSuccess withFailureHandler:handlerFailure];
+}
+
+- (void)DELETE:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure
+{
+    requestType = WebserviceCallRequestTypeDelete;
+    
+    [self webserviceCall:url parameters:parameters withSuccessHandler:handlerSuccess withFailureHandler:handlerFailure];
+}
+
 - (NSURL *)getURLForGet:(NSURL *)url withParameters:(NSDictionary *)parameters{
     
     if(!url || !parameters)
@@ -138,6 +157,33 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     return newURL;
 }
 
+- (void)setHttpMethodForRequest:(NSMutableURLRequest *)request{
+    
+    if(!request)
+        return;
+    
+    switch (requestType) {
+        case WebserviceCallRequestTypePost:
+            [request setHTTPMethod:@"POST"];
+            break;
+        case WebserviceCallRequestTypePut:
+            [request setHTTPMethod:@"PUT"];
+            break;
+        case WebserviceCallRequestTypeGet:
+            [request setHTTPMethod:@"GET"];
+            break;
+        case WebserviceCallRequestTypePatch:
+            [request setHTTPMethod:@"PATCH"];
+            break;
+        case WebserviceCallRequestTypeDelete:
+            [request setHTTPMethod:@"DELETE"];
+            break;
+            
+        default:
+            break;
+    }
+}
+
 
 -(void)makeRequestForWebServiceAtURL:(NSURL *)url
 {
@@ -149,18 +195,10 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
-    if(requestType == WebserviceCallRequestTypeGet)
+    [self setHttpMethodForRequest:request];
+
+    if(requestType != WebserviceCallRequestTypeGet)
     {
-        [request setHTTPMethod:@"GET"];
-    }
-    else if(requestType == WebserviceCallRequestTypePost || requestType == WebserviceCallRequestTypePut)
-    {
-        if(requestType == WebserviceCallRequestTypePost) {
-            [request setHTTPMethod:@"POST"];
-        } else {
-            [request setHTTPMethod:@"PUT"];
-        }
-        
         if(_headerBody)
         {
             [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -189,53 +227,108 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
+    [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        
+        if(_shouldDisableInteraction){
+            [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
+        }
+        
+        if (data.length > 0)
+        {
+            NSString *cacheKey = [self getKeyForCacheAccordingToUrl:url];
+            
+            if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheIfAvailableOtherwiseFromUrlAndUpdateInCache)
+            {
+                [[CacheManager sharedInstance] cacheData:data forKey:cacheKey];
+            }
+            else if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache || _cachePolicy == WebserviceCallCachePolicyRequestFromCacheOnlyThenCallUrlInBackgroundAndUpdateInCache || _cachePolicy == WebserviceCallCachePolicyRequestFromUrlAndUpdateInCache)
+            {
+                if([[CacheManager sharedInstance] isDataAvailableForKey:cacheKey])
+                {
+                    [[CacheManager sharedInstance] updateData:data forKey:cacheKey];
+                }
+                else
+                {
+                    [[CacheManager sharedInstance] cacheData:data forKey:cacheKey];
+                }
+            }
+            
+            if(_cachePolicy != WebserviceCallCachePolicyRequestFromCacheOnlyThenCallUrlInBackgroundAndUpdateInCache || !isDataReturnedFromCache)
+                [self respondToSuccessHandlerWithData:data isResponseFromCache:NO];
+        }
+        else if(error)
+        {
+            failureHandler(error);
+        }
+        else
+        {
+            failureHandler (nil);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if(_isShowLoader)
+            {
+                if (ObjLoader)
+                    [ObjLoader hideLoader];
+            }
+        });
+        
+    }] resume];
     
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response,
-                                               NSData *data, NSError *connectionError)
-     {
-         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-         
-         if(_isShowLoader)
-         {
-             if (ObjLoader)
-                 [ObjLoader hideLoader];
-         }
-         //[self hideLoader];
-         
-         if (data.length > 0)
-         {
-             NSString *cacheKey = [self getKeyForCacheAccordingToUrl:url];
-
-             if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheIfAvailableOtherwiseFromUrlAndUpdateInCache)
-             {
-                 [[CacheManager sharedInstance] cacheData:data forKey:cacheKey];
-             }
-             else if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache || _cachePolicy == WebserviceCallCachePolicyRequestFromCacheOnlyThenCallUrlInBackgroundAndUpdateInCache || _cachePolicy == WebserviceCallCachePolicyRequestFromUrlAndUpdateInCache)
-             {
-                 if([[CacheManager sharedInstance] isDataAvailableForKey:cacheKey])
-                 {
-                     [[CacheManager sharedInstance] updateData:data forKey:cacheKey];
-                 }
-                 else
-                 {
-                     [[CacheManager sharedInstance] cacheData:data forKey:cacheKey];
-                 }
-             }
-             
-             if(_cachePolicy != WebserviceCallCachePolicyRequestFromCacheOnlyThenCallUrlInBackgroundAndUpdateInCache || !isDataReturnedFromCache)
-                 [self respondToSuccessHandlerWithData:data isResponseFromCache:NO];
-         }
-         else if(connectionError)
-         {
-             failureHandler(connectionError);
-         }
-         else
-         {
-             failureHandler (nil);
-         }
-     }];
+    
+//    Deprecated.....
+    
+//    [NSURLConnection sendAsynchronousRequest:request
+//                                       queue:[NSOperationQueue mainQueue]
+//                           completionHandler:^(NSURLResponse *response,
+//                                               NSData *data, NSError *connectionError)
+//     {
+//         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+//         
+//         if(_isShowLoader)
+//         {
+//             if (ObjLoader)
+//                 [ObjLoader hideLoader];
+//         }
+//         
+//         if(_shouldDisableInteraction){
+//             [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
+//         }
+//         
+//         if (data.length > 0)
+//         {
+//             NSString *cacheKey = [self getKeyForCacheAccordingToUrl:url];
+//
+//             if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheIfAvailableOtherwiseFromUrlAndUpdateInCache)
+//             {
+//                 [[CacheManager sharedInstance] cacheData:data forKey:cacheKey];
+//             }
+//             else if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache || _cachePolicy == WebserviceCallCachePolicyRequestFromCacheOnlyThenCallUrlInBackgroundAndUpdateInCache || _cachePolicy == WebserviceCallCachePolicyRequestFromUrlAndUpdateInCache)
+//             {
+//                 if([[CacheManager sharedInstance] isDataAvailableForKey:cacheKey])
+//                 {
+//                     [[CacheManager sharedInstance] updateData:data forKey:cacheKey];
+//                 }
+//                 else
+//                 {
+//                     [[CacheManager sharedInstance] cacheData:data forKey:cacheKey];
+//                 }
+//             }
+//             
+//             if(_cachePolicy != WebserviceCallCachePolicyRequestFromCacheOnlyThenCallUrlInBackgroundAndUpdateInCache || !isDataReturnedFromCache)
+//                 [self respondToSuccessHandlerWithData:data isResponseFromCache:NO];
+//         }
+//         else if(connectionError)
+//         {
+//             failureHandler(connectionError);
+//         }
+//         else
+//         {
+//             failureHandler (nil);
+//         }
+//     }];
 }
 
 #pragma mark - Network Reachability
@@ -371,12 +464,16 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
         return;
     }
     
-    if(_isShowLoader)////self showLoader];
+    if(_isShowLoader)
     {
         if(!ObjLoader)
             ObjLoader = [[Loader alloc] init];
         
         [ObjLoader showLoader];
+    }
+    
+    if(_shouldDisableInteraction){
+        [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:NO];
     }
     
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:60];
@@ -514,6 +611,10 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
             [ObjLoader hideLoader];
     }
     
+    if(_shouldDisableInteraction){
+        [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
+    }
+    
     [[UIApplication sharedApplication] endBackgroundTask:bgTask];
     
     bgTask = UIBackgroundTaskInvalid;
@@ -551,6 +652,10 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     {
         if (ObjLoader)
             [ObjLoader hideLoader];
+    }
+    
+    if(_shouldDisableInteraction){
+        [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
     }
     
     if(fileHandle)
@@ -777,6 +882,10 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
         [ObjLoader showLoader];
     }
     
+    if(_shouldDisableInteraction){
+        [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:NO];
+    }
+    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
     NSString *boundary = @"---------------------------14737809831466499882746641449";
@@ -825,27 +934,56 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
         }
     }
     
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response,
-                                               NSData *data, NSError *connectionError)
-     {
-         if(_isShowLoader)
-         {
-             if (ObjLoader)
-                 [ObjLoader hideLoader];
-         }
-         //[self hideLoader];
-         
-         if (data.length > 0 && connectionError == nil)
-         {
-             [self respondToSuccessHandlerWithData:data isResponseFromCache:NO];
-         }
-         else if(connectionError)
-         {
-             failureHandler(connectionError);
-         }
-     }];
+    [[[NSURLSession sharedSession] uploadTaskWithRequest:request fromData:body completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        if(_shouldDisableInteraction){
+            [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
+        }
+        
+        if (data.length > 0 && error == nil)
+        {
+            [self respondToSuccessHandlerWithData:data isResponseFromCache:NO];
+        }
+        else if(error)
+        {
+            failureHandler(error);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if(_isShowLoader)
+            {
+                if (ObjLoader)
+                    [ObjLoader hideLoader];
+            }
+        });
+        
+    }] resume];
+    
+//    Deprecated...
+//    [NSURLConnection sendAsynchronousRequest:request
+//                                       queue:[NSOperationQueue mainQueue]
+//                           completionHandler:^(NSURLResponse *response,
+//                                               NSData *data, NSError *connectionError)
+//     {
+//         if(_isShowLoader)
+//         {
+//             if (ObjLoader)
+//                 [ObjLoader hideLoader];
+//         }
+//         
+//         if(_shouldDisableInteraction){
+//             [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
+//         }
+//         
+//         if (data.length > 0 && connectionError == nil)
+//         {
+//             [self respondToSuccessHandlerWithData:data isResponseFromCache:NO];
+//         }
+//         else if(connectionError)
+//         {
+//             failureHandler(connectionError);
+//         }
+//     }];
 }
 
 #pragma mark - Dealloc
@@ -861,7 +999,10 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
             [ObjLoader hideLoader];
         }
     }
-        //[self hideLoader];
+    
+    if(_shouldDisableInteraction){
+        [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
+    }
     
     if(connectionForFile)
         [connectionForFile cancel];
