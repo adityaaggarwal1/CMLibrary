@@ -235,39 +235,42 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
             [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
         }
         
-        if (data.length > 0)
-        {
-            NSString *cacheKey = [self getKeyForCacheAccordingToUrl:url];
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-            if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheIfAvailableOtherwiseFromUrlAndUpdateInCache)
+            if (data.length > 0)
             {
-                [[CacheManager sharedInstance] cacheData:data forKey:cacheKey];
-            }
-            else if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache || _cachePolicy == WebserviceCallCachePolicyRequestFromCacheOnlyThenCallUrlInBackgroundAndUpdateInCache || _cachePolicy == WebserviceCallCachePolicyRequestFromUrlAndUpdateInCache)
-            {
-                if([[CacheManager sharedInstance] isDataAvailableForKey:cacheKey])
-                {
-                    [[CacheManager sharedInstance] updateData:data forKey:cacheKey];
-                }
-                else
+                NSString *cacheKey = [self getKeyForCacheAccordingToUrl:url];
+                
+                if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheIfAvailableOtherwiseFromUrlAndUpdateInCache)
                 {
                     [[CacheManager sharedInstance] cacheData:data forKey:cacheKey];
                 }
+                else if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache || _cachePolicy == WebserviceCallCachePolicyRequestFromCacheOnlyThenCallUrlInBackgroundAndUpdateInCache || _cachePolicy == WebserviceCallCachePolicyRequestFromUrlAndUpdateInCache)
+                {
+                    if([[CacheManager sharedInstance] isDataAvailableForKey:cacheKey])
+                    {
+                        [[CacheManager sharedInstance] updateData:data forKey:cacheKey];
+                    }
+                    else
+                    {
+                        [[CacheManager sharedInstance] cacheData:data forKey:cacheKey];
+                    }
+                }
+                
+                if(_cachePolicy != WebserviceCallCachePolicyRequestFromCacheOnlyThenCallUrlInBackgroundAndUpdateInCache || !isDataReturnedFromCache){
+                    [self respondToSuccessHandlerWithData:data isResponseFromCache:NO];
+                }
             }
-            
-            if(_cachePolicy != WebserviceCallCachePolicyRequestFromCacheOnlyThenCallUrlInBackgroundAndUpdateInCache || !isDataReturnedFromCache)
-                [self respondToSuccessHandlerWithData:data isResponseFromCache:NO];
-        }
-        else if(error)
-        {
-            failureHandler(error);
-        }
-        else
-        {
-            failureHandler (nil);
-        }
+            else if(error)
+            {
+                failureHandler(error);
+            }
+            else
+            {
+                failureHandler (nil);
+            }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+
             if(_isShowLoader)
             {
                 if (ObjLoader)
@@ -940,16 +943,18 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
             [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
         }
         
-        if (data.length > 0 && error == nil)
-        {
-            [self respondToSuccessHandlerWithData:data isResponseFromCache:NO];
-        }
-        else if(error)
-        {
-            failureHandler(error);
-        }
-        
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if (data.length > 0 && error == nil)
+            {
+                
+                    [self respondToSuccessHandlerWithData:data isResponseFromCache:NO];
+            }
+            else if(error)
+            {
+                failureHandler(error);
+            }
+        
             if(_isShowLoader)
             {
                 if (ObjLoader)
