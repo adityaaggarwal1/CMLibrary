@@ -59,8 +59,11 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     
     isDataReturnedFromCache = NO;
     
-    if (![self checkNetworkConnectivity])
+    if (![self checkNetworkConnectivity]){
+        
+        failureHandler([NSError errorWithDomain:@"No Internet" code:NotReachable userInfo:nil]);
         return;
+    }
     
     if(_cachePolicy != WebserviceCallCachePolicyRequestFromUrlNoCache && _cachePolicy != WebserviceCallCachePolicyRequestFromUrlAndUpdateInCache)
     {
