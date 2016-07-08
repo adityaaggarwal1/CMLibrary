@@ -263,10 +263,10 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
             
             if (_parametersDict){
                 NSError *error;
-                httpBodyData = [NSJSONSerialization dataWithJSONObject:_parametersDict options:NSJSONWritingPrettyPrinted error:&error];
+                httpBodyData = [NSMutableData dataWithData:[NSJSONSerialization dataWithJSONObject:_parametersDict options:NSJSONWritingPrettyPrinted error:&error]];
             }
             else if (_headerBody){
-                httpBodyData = _headerBody;
+                httpBodyData = [NSMutableData dataWithBytes:[_headerBody UTF8String] length:[_headerBody length]];;
             }
         }
             break;
@@ -276,10 +276,10 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
             
             if (_parametersDict){
                 NSString *headerBodyString = [_parametersDict urlEncodedString];
-                httpBodyData = [NSData dataWithBytes:[headerBodyString UTF8String] length:[headerBodyString length]];
+                httpBodyData = [NSMutableData dataWithBytes:[headerBodyString UTF8String] length:[headerBodyString length]];
             }
             else if (_headerBody){
-                httpBodyData = [NSData dataWithBytes:[_headerBody UTF8String] length:[_headerBody length]];;
+                httpBodyData = [NSMutableData dataWithBytes:[_headerBody UTF8String] length:[_headerBody length]];
             }
         }
             break;
@@ -1167,7 +1167,7 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
         return YES;
     
     if(_authToken){
-        if (![responseDict objectForKey:@"status_code"] || [responseDict objectForKey:@"status_code"] != 401)
+        if (![responseDict objectForKey:@"status_code"] || [[responseDict objectForKey:@"status_code"] integerValue] != 401)
             return YES;
         
         return NO;
@@ -1205,7 +1205,7 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     _authToken.scope = [CMLibraryUtility getObjectForKey:ResponseTokenScopeKey fromDict:responseDict];
     _authToken.token_type = [CMLibraryUtility getObjectForKey:ResponseTokenTypeKey fromDict:responseDict];
     _authToken.refresh_token = [CMLibraryUtility getObjectForKey:ResponseRefreshTokenKey fromDict:responseDict];
-    _authToken.url = _url;
+    _authToken.url = _url.absoluteString;
     
     [[FXKeychain defaultKeychain] setObject:_authToken forKey:_authTokenKey];
 }
@@ -1227,7 +1227,7 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     
     [webserviceCall fetchAuthTokenForClientSecret:_authToken.client_secret clientId:_authToken.client_id grantType:_authToken.grant_type andStoreAtKey:_authTokenKey];
     
-    [webserviceCall POST:_authToken.url parameters:@{ResponseRefreshTokenKey:_authToken.refresh_token} withSuccessHandler:^(WebserviceResponse *response) {
+    [webserviceCall POST:[NSURL URLWithString:_authToken.url] parameters:@{ResponseRefreshTokenKey:_authToken.refresh_token} withSuccessHandler:^(WebserviceResponse *response) {
         
         [self POST:_url parameters:_parametersDict withSuccessHandler:successHandler withFailureHandler:failureHandler];
         
