@@ -1,14 +1,13 @@
 //
-//  NSIProgressView.m
-//  VideoTag
+//  ProgressView.m
 //
 //  Created by Aditya Aggarwal on 25/04/14.
 //
 //
 
-#import "NSIProgressView.h"
+#import "ProgressView.h"
 
-@implementation NSIProgressView
+@implementation ProgressView
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -97,12 +96,6 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
- -(void)setProgressViewImages
- {
- [_nsiProgressView setImageBackground:[UIImage imageNamed:@"last_score_base_bar.png"]];
- [_nsiProgressView setImageProgressBar:[UIImage imageNamed:@"HotPathScorePopUp_last_score_fill"]];
- [_nsiProgressView setProgress:40];
- }
  
 }
 */

@@ -1,6 +1,5 @@
 //
 //  WebserviceCall.m
-//  VideoTag
 //
 //  Created by Aditya Aggarwal on 02/04/14.
 //
@@ -13,12 +12,18 @@
 #import "Loader.h"
 #import "CMLibraryConstants.h"
 #import "CMLibraryUtility.h"
+#import "AuthToken.h"
+#import "FXKeychain.h"
+#import "NSDictionary+URLEncoding.h"
 
 NSString const *CachedResourcesFolderName = @"CachedResources";
 
 @interface WebserviceCall ()
 
+@property (strong, nonatomic) NSString *authTokenKey;
+@property (nonatomic) BOOL shouldStoreAuthToken;
 @property (nonatomic, copy) NSString *downloadFilePath;
+@property (strong, nonatomic) AuthToken *authToken;
 
 @end
 
@@ -30,16 +35,19 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     if (self) {
         _cachePolicy = WebserviceCallCachePolicyRequestFromUrlNoCache;
         _responseType = WebserviceCallResponseJSON;
+        _requestType = WebserviceCallRequestTypeJson;
+//        _authTokenType = WebserviceCallRequestAuthTokenTypeNone;
     }
     return self;
 }
 
-- (instancetype)initWithResponseType:(WebserviceCallResponseType)responseType cachePolicy:(WebserviceCallCachePolicy)cachePolicy{
+- (instancetype)initWithResponseType:(WebserviceCallResponseType)responseType requestType:(WebserviceCallRequestType)requestType cachePolicy:(WebserviceCallCachePolicy)cachePolicy{
     
     self = [super init];
     if (self) {
         _responseType = responseType;
         _cachePolicy = cachePolicy;
+        _requestType = requestType;
     }
     return self;
 }
@@ -102,7 +110,7 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
 
 - (void)GET:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure
 {
-    requestType = WebserviceCallRequestTypeGet;
+    requestMethod = WebserviceCallRequestMethodGet;
     
     url = [self getURLForGet:url withParameters:parameters];
     
@@ -111,28 +119,28 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
 
 - (void)POST:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure
 {
-    requestType = WebserviceCallRequestTypePost;
+    requestMethod = WebserviceCallRequestMethodPost;
     
     [self webserviceCall:url parameters:parameters withSuccessHandler:handlerSuccess withFailureHandler:handlerFailure];
 }
 
 - (void)PUT:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure
 {
-    requestType = WebserviceCallRequestTypePut;
+    requestMethod = WebserviceCallRequestMethodPut;
     
     [self webserviceCall:url parameters:parameters withSuccessHandler:handlerSuccess withFailureHandler:handlerFailure];
 }
 
 - (void)PATCH:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure
 {
-    requestType = WebserviceCallRequestTypePatch;
+    requestMethod = WebserviceCallRequestMethodPatch;
     
     [self webserviceCall:url parameters:parameters withSuccessHandler:handlerSuccess withFailureHandler:handlerFailure];
 }
 
 - (void)DELETE:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure
 {
-    requestType = WebserviceCallRequestTypeDelete;
+    requestMethod = WebserviceCallRequestMethodDelete;
     
     [self webserviceCall:url parameters:parameters withSuccessHandler:handlerSuccess withFailureHandler:handlerFailure];
 }
@@ -165,20 +173,20 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     if(!request)
         return;
     
-    switch (requestType) {
-        case WebserviceCallRequestTypePost:
+    switch (requestMethod) {
+        case WebserviceCallRequestMethodPost:
             [request setHTTPMethod:@"POST"];
             break;
-        case WebserviceCallRequestTypePut:
+        case WebserviceCallRequestMethodPut:
             [request setHTTPMethod:@"PUT"];
             break;
-        case WebserviceCallRequestTypeGet:
+        case WebserviceCallRequestMethodGet:
             [request setHTTPMethod:@"GET"];
             break;
-        case WebserviceCallRequestTypePatch:
+        case WebserviceCallRequestMethodPatch:
             [request setHTTPMethod:@"PATCH"];
             break;
-        case WebserviceCallRequestTypeDelete:
+        case WebserviceCallRequestMethodDelete:
             [request setHTTPMethod:@"DELETE"];
             break;
             
@@ -187,6 +195,156 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     }
 }
 
+//- (AuthToken *)getTokenByTokenType{
+//    switch (_authTokenType) {
+//        case WebserviceCallRequestAuthTokenTypePublic:
+//            
+//            break;
+//        case WebserviceCallRequestAuthTokenTypeUser:
+//            
+//            break;
+//            
+//        default:
+//            break;
+//    }
+//}
+
+- (void)addClientCredentialsInParamterDict{
+    
+    if (!_authToken)
+        return;
+    
+    NSMutableDictionary *paramDict;
+    
+    if (_parametersDict){
+        paramDict = [NSMutableDictionary dictionaryWithDictionary:_parametersDict];
+    }
+    else{
+        paramDict = [NSMutableDictionary dictionary];
+    }
+    
+    if (_authToken.client_id)
+        [paramDict setObject:_authToken.client_id forKey:RequestClientIdKey];
+    if (_authToken.client_secret)
+        [paramDict setObject:_authToken.client_secret forKey:RequestClientSecretKey];
+    if (_authToken.grant_type)
+        [paramDict setObject:_authToken.grant_type forKey:RequestGrantTypeKey];
+    
+    [self setParametersDict:paramDict];
+}
+
+- (void)setRequestHeaderAndBody:(NSMutableURLRequest *)request{
+    
+    if(_headerFieldsDict)
+    {
+        NSArray *allKeys = [_headerFieldsDict allKeys];
+        
+        //        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        
+        for (NSString *key in allKeys)
+        {
+            [request setValue:[_headerFieldsDict objectForKey:key] forHTTPHeaderField:key];
+        }
+    }
+    
+    if(requestMethod == WebserviceCallRequestMethodGet)
+        return;
+    
+    if (_shouldStoreAuthToken){
+        [self addClientCredentialsInParamterDict];
+    }
+        
+    NSMutableData *httpBodyData;
+    
+    switch (_requestType) {
+        case WebserviceCallRequestTypeJson:{
+            
+            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            
+            if (_parametersDict){
+                NSError *error;
+                httpBodyData = [NSJSONSerialization dataWithJSONObject:_parametersDict options:NSJSONWritingPrettyPrinted error:&error];
+            }
+            else if (_headerBody){
+                httpBodyData = _headerBody;
+            }
+        }
+            break;
+        case WebserviceCallRequestTypeFormURLEncoded:{
+            
+            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+            
+            if (_parametersDict){
+                NSString *headerBodyString = [_parametersDict urlEncodedString];
+                httpBodyData = [NSData dataWithBytes:[headerBodyString UTF8String] length:[headerBodyString length]];
+            }
+            else if (_headerBody){
+                httpBodyData = [NSData dataWithBytes:[_headerBody UTF8String] length:[_headerBody length]];;
+            }
+        }
+            break;
+        case WebserviceCallRequestTypeMultipartFormData:{
+            
+            if (!_parametersDict || [[_parametersDict allKeys] count] == 0)
+                break;
+            
+            httpBodyData = [NSMutableData data];
+            NSString *boundary = @"---------------------------14737809831466499882746641449";
+            
+            //    Open form
+            NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+            [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+            
+            NSArray *allKeys = [_parametersDict allKeys];
+            
+            for (NSString *key in allKeys)
+            {
+                [httpBodyData appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+                [httpBodyData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n",key] dataUsingEncoding:NSUTF8StringEncoding]];
+                
+                [httpBodyData appendData:[[_parametersDict valueForKey:key] dataUsingEncoding:NSUTF8StringEncoding]];
+                [httpBodyData appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            }
+            
+            // close form
+            [httpBodyData appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            
+//                if (_parametersDict){
+//                    NSString *headerBodyString = [self urlEncodedString:_parametersDict];
+//                    httpBodyData = [NSData dataWithBytes:[headerBodyString UTF8String] length:[headerBodyString length]];
+//                }
+//                else if (_headerBody){
+//                    httpBodyData = [NSData dataWithBytes:[_headerBody UTF8String] length:[_headerBody length]];;
+//                }
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+    if (httpBodyData){
+        [request setHTTPBody:httpBodyData];
+    }
+
+//    if(requestMethod != WebserviceCallRequestMethodGet)
+//    {
+//        if(_parametersDict)
+//        {
+//            NSError *error;
+//            NSData *postData = [NSJSONSerialization dataWithJSONObject:_parametersDict options:NSJSONWritingPrettyPrinted error:&error];
+//            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+//            [request setHTTPBody:postData];
+//        }
+//    }
+    
+    
+//    else if(_headerBody)
+//    {
+//        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+//        [request setHTTPBody:[NSData dataWithBytes:[_headerBody UTF8String] length:[_headerBody length]]];
+//    }
+}
 
 -(void)makeRequestForWebServiceAtURL:(NSURL *)url
 {
@@ -198,35 +356,13 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
-    [self setHttpMethodForRequest:request];
-
-    if(requestType != WebserviceCallRequestTypeGet)
-    {
-        if(_headerBody)
-        {
-            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-            [request setHTTPBody:[NSData dataWithBytes:[_headerBody UTF8String] length:[_headerBody length]]];
-        }
-        else if(_parametersDict)
-        {
-            NSError *error;
-            NSData *postData = [NSJSONSerialization dataWithJSONObject:_parametersDict options:NSJSONWritingPrettyPrinted error:&error];
-            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-            [request setHTTPBody:postData];
-        }
+    if (_authToken && !_shouldStoreAuthToken){
+        [self embedAuthInRequest:request];
     }
     
-    if(_headerFieldsDict)
-    {
-        NSArray *allKeys = [_headerFieldsDict allKeys];
-        
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        
-        for (NSString *key in allKeys)
-        {
-            [request setValue:[_headerFieldsDict objectForKey:key] forHTTPHeaderField:key];
-        }
-    }
+    [self setHttpMethodForRequest:request];
+    
+    [self setRequestHeaderAndBody:request];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
@@ -815,13 +951,24 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     else
         responseData = data;
     
-    WebserviceResponse *webserviceResponse = [WebserviceResponse new];
-    [webserviceResponse setWebserviceUrl:[_url absoluteString]];
-    [webserviceResponse setWebserviceResponse:responseData];
-    [webserviceResponse setDownloadId:_downloadId];
-    [webserviceResponse setIsResponseFromCache:isResponseFromCache];
-    
-    successHandler(webserviceResponse);
+    if ([self isAuthTokenDisabledOrNotExpired:responseData]){
+        
+        if ([CMLibraryUtility checkIfStringContainsText:_authTokenKey] && _shouldStoreAuthToken){        // Storing auth token from response
+            [self storeAuthTokenFromResponse:responseData];
+        }
+        
+        WebserviceResponse *webserviceResponse = [WebserviceResponse new];
+        [webserviceResponse setWebserviceUrl:[_url absoluteString]];
+        [webserviceResponse setWebserviceResponse:responseData];
+        [webserviceResponse setDownloadId:_downloadId];
+        [webserviceResponse setIsResponseFromCache:isResponseFromCache];
+        
+        successHandler(webserviceResponse);
+    }
+    else{
+        // Refresh token
+        [self webserviceCallToRefreshToken];
+    }
 }
 
 -(NSString *)getKeyForCacheAccordingToUrl:(NSURL *)url
@@ -992,6 +1139,101 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
 //             failureHandler(connectionError);
 //         }
 //     }];
+}
+
+#pragma mark - AuthToken
+
+- (void)embedAuthInRequest:(NSMutableURLRequest *)request{
+    
+    if(!request)
+        return;
+    
+    [request setValue:[self getBearerToken] forHTTPHeaderField:@"Authorization"];
+}
+
+- (NSString *)getBearerToken{
+    
+    NSString *token = [_authToken access_token];
+    
+    if (![CMLibraryUtility checkIfStringContainsText:token])
+        token = @"";
+    
+    return [NSString stringWithFormat:@"Bearer %@",token];
+}
+
+- (BOOL)isAuthTokenDisabledOrNotExpired:(NSDictionary *)responseDict{
+    
+    if (!responseDict || ![responseDict isKindOfClass:[NSDictionary class]])
+        return YES;
+    
+    if(_authToken){
+        if (![responseDict objectForKey:@"status_code"] || [responseDict objectForKey:@"status_code"] != 401)
+            return YES;
+        
+        return NO;
+    }
+    else{
+        return YES;
+    }
+}
+
+- (void)fetchAuthTokenForClientSecret:(NSString *)clientSecret clientId:(NSString *)clientId grantType:(NSString *)grantType andStoreAtKey:(NSString *)key{
+    if (![CMLibraryUtility checkIfStringContainsText:key] || ![CMLibraryUtility checkIfStringContainsText:clientSecret] || ![CMLibraryUtility checkIfStringContainsText:clientId] || ![CMLibraryUtility checkIfStringContainsText:grantType])
+        return;
+    
+    _shouldStoreAuthToken = YES;
+    [self setAuthTokenKey:key];
+    
+    AuthToken *authToken = [AuthToken new];
+    authToken.client_id = clientId;
+    authToken.client_secret = clientSecret;
+    authToken.grant_type = grantType;
+    
+    [self setAuthToken:authToken];
+}
+
+- (void)storeAuthTokenFromResponse:(NSDictionary *)responseDict{
+    if (!responseDict || ![responseDict isKindOfClass:[NSDictionary class]])
+        return;
+    
+    if (!_authToken){
+        AuthToken *authToken = [AuthToken new];
+        [self setAuthToken:authToken];
+    }
+    _authToken.access_token = [CMLibraryUtility getObjectForKey:ResponseAccessTokenKey fromDict:responseDict];
+    _authToken.expires_in = [CMLibraryUtility getObjectForKey:ResponseTokenExpiresInKey fromDict:responseDict];
+    _authToken.scope = [CMLibraryUtility getObjectForKey:ResponseTokenScopeKey fromDict:responseDict];
+    _authToken.token_type = [CMLibraryUtility getObjectForKey:ResponseTokenTypeKey fromDict:responseDict];
+    _authToken.refresh_token = [CMLibraryUtility getObjectForKey:ResponseRefreshTokenKey fromDict:responseDict];
+    _authToken.url = _url;
+    
+    [[FXKeychain defaultKeychain] setObject:_authToken forKey:_authTokenKey];
+}
+
+- (void)addAuthTokenInHeaderFromKey:(NSString *)key{
+    if (![CMLibraryUtility checkIfStringContainsText:key])
+        return;
+    
+    [self setAuthTokenKey:key];
+    [self setAuthToken:[[FXKeychain defaultKeychain] objectForKey:key]];
+}
+
+- (void)webserviceCallToRefreshToken{
+    
+    if (!_authToken || ![CMLibraryUtility checkIfStringContainsText:_authToken.refresh_token])
+        return;
+    
+    WebserviceCall *webserviceCall = [[WebserviceCall alloc] initWithResponseType:WebserviceCallResponseJSON requestType:WebserviceCallRequestTypeFormURLEncoded cachePolicy:WebserviceCallCachePolicyRequestFromUrlNoCache];
+    
+    [webserviceCall fetchAuthTokenForClientSecret:_authToken.client_secret clientId:_authToken.client_id grantType:_authToken.grant_type andStoreAtKey:_authTokenKey];
+    
+    [webserviceCall POST:_authToken.url parameters:@{ResponseRefreshTokenKey:_authToken.refresh_token} withSuccessHandler:^(WebserviceResponse *response) {
+        
+        [self POST:_url parameters:_parametersDict withSuccessHandler:successHandler withFailureHandler:failureHandler];
+        
+    } withFailureHandler:^(NSError *error) {
+        
+    }];
 }
 
 #pragma mark - Dealloc

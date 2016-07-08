@@ -1,6 +1,5 @@
 //
-//  NSIImageView.h
-//  VideoTag
+//  AsyncImageView.h
 //
 //  Created by Aditya Aggarwal on 24/04/14.
 //
@@ -8,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface NSIImageView : UIImageView{
+@interface AsyncImageView : UIImageView{
     
 }
 

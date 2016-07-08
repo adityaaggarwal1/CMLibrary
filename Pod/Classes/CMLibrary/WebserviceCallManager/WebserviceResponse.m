@@ -1,6 +1,5 @@
 //
 //  WebserviceResponse.m
-//  VideoTag
 //
 //  Created by Aditya Aggarwal on 24/04/14.
 //

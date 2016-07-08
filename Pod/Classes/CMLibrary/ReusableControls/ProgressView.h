@@ -1,6 +1,5 @@
 //
-//  NSIProgressView.h
-//  VideoTag
+//  ProgressView.h
 //
 //  Created by Aditya Aggarwal on 25/04/14.
 //
@@ -8,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface NSIProgressView : UIView{
+@interface ProgressView : UIView{
     
     UIImageView *imgViewBackground;
     UIImageView *imgViewProgress;

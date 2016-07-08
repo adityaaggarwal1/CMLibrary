@@ -1,8 +1,7 @@
 //
 //  Loader.h
-//  VideoTag
 //
-//  Created by Amit Saini on 16/04/14.
+//  Created by Aditya Aggarwal on 16/04/14.
 //
 //
 

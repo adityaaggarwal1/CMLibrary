@@ -1,16 +1,15 @@
 //
-//  NSIImageView.m
-//  VideoTag
+//  AsyncImageView.m
 //
 //  Created by Aditya Aggarwal on 24/04/14.
 //
 //
 
-#import "NSIImageView.h"
+#import "AsyncImageView.h"
 #import "CMLibraryUtility.h"
 #import "WebserviceCall.h"
 
-@implementation NSIImageView
+@implementation AsyncImageView
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -36,7 +35,7 @@
 
 -(void)fetchImageFromUrl:(NSString *)url
 {
-    WebserviceCall *webserviceCall = [[WebserviceCall alloc] initWithResponseType:WebserviceCallResponsePNG cachePolicy:WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache];
+    WebserviceCall *webserviceCall = [[WebserviceCall alloc] initWithResponseType:WebserviceCallResponsePNG requestType:WebserviceCallRequestTypeJson cachePolicy:WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache];
     
     [webserviceCall downloadFileFromUrl:[NSURL URLWithString:url] withSuccessHandler:^(WebserviceResponse *response) {
         

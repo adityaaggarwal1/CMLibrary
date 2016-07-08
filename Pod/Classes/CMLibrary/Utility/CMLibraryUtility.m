@@ -54,4 +54,23 @@
     return [cachesDirectory stringByAppendingString:[NSString stringWithFormat:@"/%@",innerFilePath]];
 }
 
++(id)getObjectForKey:(NSString *)key fromDict:(NSDictionary *)dict
+{
+    if(!dict || ![CMLibraryUtility checkIfStringContainsText:key])
+        return nil;
+    
+    id value;
+    @try {
+        value = [dict objectForKey:key];
+    }
+    @catch (NSException *exception) {
+        
+    }
+    
+    if([value isEqual:[NSNull null]] || value == NULL)
+        return nil;
+    
+    return value;
+}
+
 @end

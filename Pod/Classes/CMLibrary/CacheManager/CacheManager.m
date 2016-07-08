@@ -1,6 +1,5 @@
 //
 //  CacheManager.m
-//  VideoTag
 //
 //  Created by Aditya Aggarwal on 08/04/14.
 //

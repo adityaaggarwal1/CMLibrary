@@ -15,5 +15,6 @@
 +(void)addBasicConstraintsOnSubView:(UIView *)subView onSuperView:(UIView *)superView;
 +(void)showAlert:(NSString *)title withMessage:(NSString *)message delegate:(id)delegate;
 +(NSString *)getCacheResourcePathByAppendingFileInnerPath:(NSString *)innerFilePath;
++(id)getObjectForKey:(NSString *)key fromDict:(NSDictionary *)dict;
 
 @end

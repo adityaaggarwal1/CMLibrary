@@ -1,6 +1,5 @@
 //
 //  WebserviceCall.h
-//  VideoTag
 //
 //  Created by Aditya Aggarwal on 02/04/14.
 //
@@ -12,6 +11,16 @@
 #import "WebserviceResponse.h"
 
 #define NSError_Request_Timed_Out_Code -1001
+
+#define ResponseAccessTokenKey @"access_token"
+#define ResponseTokenExpiresInKey @"expires_in"
+#define ResponseTokenScopeKey @"scope"
+#define ResponseTokenTypeKey @"token_type"
+#define ResponseRefreshTokenKey @"refresh_token"
+
+#define RequestClientIdKey @"client_id"
+#define RequestClientSecretKey @"client_secret"
+#define RequestGrantTypeKey @"grant_type"
 
 FOUNDATION_EXPORT NSString const *CachedResourcesFolderName;
 
@@ -42,13 +51,29 @@ typedef enum{
 
 typedef enum{
     
-    WebserviceCallRequestTypePost,
-    WebserviceCallRequestTypePut,
-    WebserviceCallRequestTypeGet,
-    WebserviceCallRequestTypePatch,
-    WebserviceCallRequestTypeDelete
+    WebserviceCallRequestMethodPost,
+    WebserviceCallRequestMethodPut,
+    WebserviceCallRequestMethodGet,
+    WebserviceCallRequestMethodPatch,
+    WebserviceCallRequestMethodDelete
+    
+}WebserviceCallRequestMethod;
+
+typedef enum{
+    
+    WebserviceCallRequestTypeJson,
+    WebserviceCallRequestTypeMultipartFormData,
+    WebserviceCallRequestTypeFormURLEncoded
     
 }WebserviceCallRequestType;
+
+//typedef enum{
+//    
+//    WebserviceCallRequestAuthTokenTypeNone,
+//    WebserviceCallRequestAuthTokenTypePublic,
+//    WebserviceCallRequestAuthTokenTypeUser
+//    
+//}WebserviceCallRequestAuthTokenType;
 
 typedef void(^SuccessHandler)(WebserviceResponse *response);
 typedef void(^FailureHandler)(NSError *error);
@@ -73,7 +98,7 @@ typedef void(^FailureHandler)(NSError *error);
     SuccessHandler successHandler;
     FailureHandler failureHandler;
     
-    WebserviceCallRequestType requestType;
+    WebserviceCallRequestMethod requestMethod;
     
 }
 
@@ -83,14 +108,18 @@ typedef void(^FailureHandler)(NSError *error);
 //@property (nonatomic, copy) NSString *failureNotification;
 //@property (nonatomic, copy) NSString *progressNotification;
 @property (nonatomic, assign) WebserviceCallResponseType responseType;
+@property (nonatomic, assign) WebserviceCallRequestType requestType;
 @property (nonatomic, assign) WebserviceCallCachePolicy cachePolicy;
+//@property (nonatomic, assign) WebserviceCallRequestAuthTokenType authTokenType;
 @property (assign, nonatomic) void(^ProgressHandler)(WebserviceResponse *response);
 @property (nonatomic, copy) NSDictionary *parametersDict;
 @property (nonatomic, assign) BOOL isShowLoader;
 @property (nonatomic, assign) BOOL shouldDisableInteraction;
+//@property (nonatomic, assign) BOOL isAuthEnabled;
 @property (nonatomic, copy) NSDictionary *headerFieldsDict;
 @property (nonatomic, copy) NSURL *url;
 @property (nonatomic,strong)  NSString *headerBody;
+
 
 
 
@@ -98,11 +127,29 @@ typedef void(^FailureHandler)(NSError *error);
  *  Initializes WebserviceCall object
  *
  *  @param responseType Defines the type of the response [Default is 'WebserviceCallResponseJSON']
+ *  @param requestType Defines the type of the request [Default is 'WebserviceCallRequestTypeJSON']
  *  @param cachePolicy  Defines the Cache policy [Default is 'WebserviceCallCachePolicyRequestFromUrlNoCache']
  *
  *  @return WebserviceCall object
  */
-- (instancetype)initWithResponseType:(WebserviceCallResponseType)responseType cachePolicy:(WebserviceCallCachePolicy)cachePolicy;
+- (instancetype)initWithResponseType:(WebserviceCallResponseType)responseType requestType:(WebserviceCallRequestType)requestType cachePolicy:(WebserviceCallCachePolicy)cachePolicy;
+
+/**
+ *  Call this method before calling the service to store the returned token at the given key.
+ *
+ *  @param clientSecret Client secret
+ *  @param clientId     Client id
+ *  @param grantType    Grant type
+ *  @param key          Key at which the token will be stored.
+ */
+- (void)fetchAuthTokenForClientSecret:(NSString *)clientSecret clientId:(NSString *)clientId grantType:(NSString *)grantType andStoreAtKey:(NSString *)key;
+
+/**
+ *  Call this method before calling the service to add the auth token in the header of the service call.
+ *
+ *  @param key Defines the key on which the token is stored.
+ */
+- (void)addAuthTokenInHeaderFromKey:(NSString *)key;
 
 -(void)GET:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;
 -(void)POST:(NSURL *)url parameters:(NSDictionary *)parameters withSuccessHandler:(void (^)(WebserviceResponse *response))handlerSuccess withFailureHandler:(void (^)(NSError *error))handlerFailure;
