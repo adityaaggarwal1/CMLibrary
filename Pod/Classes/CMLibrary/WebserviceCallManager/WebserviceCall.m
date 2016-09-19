@@ -368,13 +368,13 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     
     [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        
-        if(_shouldDisableInteraction){
-            [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
-        }
-        
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
+            if(_shouldDisableInteraction){
+                [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
+            }
             
             if (data.length > 0)
             {
@@ -747,19 +747,29 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
 
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     
-    if(_isShowLoader)
-    {
-        if (ObjLoader)
-            [ObjLoader hideLoader];
-    }
-    
-    if(_shouldDisableInteraction){
-        [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
-    }
-    
     [[UIApplication sharedApplication] endBackgroundTask:bgTask];
     
     bgTask = UIBackgroundTaskInvalid;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if(_isShowLoader)
+        {
+            if (ObjLoader)
+                [ObjLoader hideLoader];
+        }
+        
+        if(_shouldDisableInteraction){
+            [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
+        }
+        
+        if(fileHandle)
+        {
+            [fileHandle closeFile];
+            fileHandle = nil;
+        }
+        
+        failureHandler(error);
+    });
     
 //    {
 //    NSError *newError = nil;
@@ -774,116 +784,116 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
 //        return;
 //    }
 
-    if(fileHandle)
-    {
-        [fileHandle closeFile];
-        fileHandle = nil;
-    }
+    
     
 //    WebserviceResponse *response = [WebserviceResponse new];
 //    [response setWebserviceUrl:[_url absoluteString]];
 //    [response setWebserviceResponse:error];
 //    [response setDownloadId:_downloadId];
     
-    failureHandler(error);
+    
 }
 
 - (void) connectionDidFinishLoading:(NSURLConnection *)connection {
     
-    if(_isShowLoader)
-    {
-        if (ObjLoader)
-            [ObjLoader hideLoader];
-    }
-    
-    if(_shouldDisableInteraction){
-        [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
-    }
-    
-    if(fileHandle)
-    {
-        [fileHandle closeFile];
-        fileHandle = nil;
-    }
-    
-    if(_cachePolicy == WebserviceCallCachePolicyRequestFromUrlNoCache)
-    {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if(_isShowLoader)
+        {
+            if (ObjLoader)
+                [ObjLoader hideLoader];
+        }
+        
+        if(_shouldDisableInteraction){
+            [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
+        }
+        
+        if(fileHandle)
+        {
+            [fileHandle closeFile];
+            fileHandle = nil;
+        }
+        
+        if(_cachePolicy == WebserviceCallCachePolicyRequestFromUrlNoCache)
+        {
+            if([CMLibraryUtility checkIfStringContainsText:_downloadFilePath])
+            {
+                [self respondToSuccessHandlerWithData:[NSData dataWithContentsOfFile:_downloadFilePath] isResponseFromCache:NO];
+            }
+            else
+            {
+                [self respondToSuccessHandlerWithData:receivedData isResponseFromCache:NO];
+            }
+            
+            [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+            
+            bgTask = UIBackgroundTaskInvalid;
+            
+            NSError *error;
+            if ([[NSFileManager defaultManager] fileExistsAtPath:_downloadFilePath])
+                [[NSFileManager defaultManager] removeItemAtPath:_downloadFilePath error:&error];
+            return;
+        }
+
+        NSString *currentURL = [[[connection currentRequest] URL] absoluteString];
+        NSString *filePath = @"";
+        NSString *fileName = [self getFileNameAccordingToCurrentUrl:currentURL];
+        NSString *fileInnerPath = nil;
+        
         if([CMLibraryUtility checkIfStringContainsText:_downloadFilePath])
         {
-            [self respondToSuccessHandlerWithData:[NSData dataWithContentsOfFile:_downloadFilePath] isResponseFromCache:NO];
+            filePath = _downloadFilePath;
+            if([filePath rangeOfString:[NSString stringWithFormat:@"%@",CachedResourcesFolderName]].location != NSNotFound){
+                fileInnerPath = [CachedResourcesFolderName stringByAppendingPathComponent:fileName];
+            }
         }
         else
         {
-            [self respondToSuccessHandlerWithData:receivedData isResponseFromCache:NO];
+            NSError *error;
+            NSString *directoryPath = [self createCachedResourcesFolder];
+            
+            if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
+                [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:&error];
+            
+            filePath = [directoryPath stringByAppendingPathComponent:fileName];
+            
+            [receivedData writeToFile:filePath atomically:YES];
+        }
+        
+        [self respondToSuccessHandlerWithData:filePath isResponseFromCache:NO];
+        
+        NSData *filePathData = nil;
+        if(fileInnerPath){
+            filePathData = [fileInnerPath dataUsingEncoding:NSUTF8StringEncoding];
+        }
+        else{
+            filePathData = [filePath dataUsingEncoding:NSUTF8StringEncoding];
+        }
+
+        
+        currentURL = [currentURL stringByReplacingOccurrencesOfString:@"'" withString:@""];
+        
+        if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheIfAvailableOtherwiseFromUrlAndUpdateInCache)
+        {
+            [[CacheManager sharedInstance] cacheData:filePathData forKey:currentURL];
+        }
+        else if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache)
+        {
+            if([[CacheManager sharedInstance] isDataAvailableForKey:currentURL])
+            {
+                [[CacheManager sharedInstance] updateData:filePathData forKey:currentURL];
+            }
+            else
+            {
+                [[CacheManager sharedInstance] cacheData:filePathData forKey:currentURL];
+            }
         }
         
         [[UIApplication sharedApplication] endBackgroundTask:bgTask];
         
         bgTask = UIBackgroundTaskInvalid;
         
-        NSError *error;
-        if ([[NSFileManager defaultManager] fileExistsAtPath:_downloadFilePath])
-            [[NSFileManager defaultManager] removeItemAtPath:_downloadFilePath error:&error];
-        return;
-    }
-
-    NSString *currentURL = [[[connection currentRequest] URL] absoluteString];
-    NSString *filePath = @"";
-    NSString *fileName = [self getFileNameAccordingToCurrentUrl:currentURL];
-    NSString *fileInnerPath = nil;
-    
-    if([CMLibraryUtility checkIfStringContainsText:_downloadFilePath])
-    {
-        filePath = _downloadFilePath;
-        if([filePath rangeOfString:[NSString stringWithFormat:@"%@",CachedResourcesFolderName]].location != NSNotFound){
-            fileInnerPath = [CachedResourcesFolderName stringByAppendingPathComponent:fileName];
-        }
-    }
-    else
-    {
-        NSError *error;
-        NSString *directoryPath = [self createCachedResourcesFolder];
-        
-        if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
-            [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:&error];
-        
-        filePath = [directoryPath stringByAppendingPathComponent:fileName];
-        
-        [receivedData writeToFile:filePath atomically:YES];
-    }
-    
-    [self respondToSuccessHandlerWithData:filePath isResponseFromCache:NO];
-    
-    NSData *filePathData = nil;
-    if(fileInnerPath){
-        filePathData = [fileInnerPath dataUsingEncoding:NSUTF8StringEncoding];
-    }
-    else{
-        filePathData = [filePath dataUsingEncoding:NSUTF8StringEncoding];
-    }
-
-    
-    currentURL = [currentURL stringByReplacingOccurrencesOfString:@"'" withString:@""];
-    
-    if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheIfAvailableOtherwiseFromUrlAndUpdateInCache)
-    {
-        [[CacheManager sharedInstance] cacheData:filePathData forKey:currentURL];
-    }
-    else if(_cachePolicy == WebserviceCallCachePolicyRequestFromCacheFirstAndThenFromUrlAndUpdateInCache)
-    {
-        if([[CacheManager sharedInstance] isDataAvailableForKey:currentURL])
-        {
-            [[CacheManager sharedInstance] updateData:filePathData forKey:currentURL];
-        }
-        else
-        {
-            [[CacheManager sharedInstance] cacheData:filePathData forKey:currentURL];
-        }
-    }
-    
-    [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-    
-    bgTask = UIBackgroundTaskInvalid;
+    });
 }
 
 #pragma mark - Helper methods
@@ -1089,11 +1099,11 @@ NSString const *CachedResourcesFolderName = @"CachedResources";
     
     [[[NSURLSession sharedSession] uploadTaskWithRequest:request fromData:body completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
-        if(_shouldDisableInteraction){
-            [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
-        }
-        
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if(_shouldDisableInteraction){
+                [[[[UIApplication sharedApplication] delegate] window] setUserInteractionEnabled:YES];
+            }
             
             if (data.length > 0 && error == nil)
             {
